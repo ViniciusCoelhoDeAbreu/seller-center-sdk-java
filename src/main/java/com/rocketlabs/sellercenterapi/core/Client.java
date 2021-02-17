@@ -1,5 +1,6 @@
 package com.rocketlabs.sellercenterapi.core;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.http.request.ApacheRequest;
 import com.jcabi.http.response.JsonResponse;
 import com.rocketlabs.sellercenterapi.core.request.Method;
@@ -14,6 +15,7 @@ import com.rocketlabs.sellercenterapi.core.response.SuccessResponse;
 
 import java.io.IOException;
 
+@Loggable(Loggable.ERROR)
 public class Client {
 
     /**
@@ -47,7 +49,6 @@ public class Client {
         try {
             com.jcabi.http.Request requestToSend = new ApacheRequest(url)
                     .method(request.getMethod().toString())
-
                     .uri()
                     .queryParams(request.getParams())
                     .back();
