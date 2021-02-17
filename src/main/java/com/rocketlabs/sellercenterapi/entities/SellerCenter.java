@@ -7,8 +7,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+
 import com.jcabi.aspects.Loggable;
 import com.jcabi.http.request.ApacheRequest;
+import com.jcabi.http.request.BaseRequest;
 import com.rocketlabs.sellercenterapi.core.Client;
 import com.rocketlabs.sellercenterapi.core.request.Request;
 import com.rocketlabs.sellercenterapi.core.response.SuccessResponse;
@@ -60,7 +63,10 @@ public final class SellerCenter {
     
     static {
     	Annotation annotation = ApacheRequest.class.getDeclaredAnnotations()[1];
+    	Annotation annotation2 = BaseRequest.class.getDeclaredAnnotations()[1];
     	changeAnnotationValue(annotation, "value", Loggable.ERROR);
+    	changeAnnotationValue(annotation2, "value", Loggable.ERROR);
+    	
     }
     
     @SuppressWarnings("unchecked")

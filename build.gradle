@@ -21,7 +21,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.glassfish/javax.json
     compile group: 'org.glassfish', name: 'javax.json', version: '1.0.4'
     // https://mvnrepository.com/artifact/com.jcabi/jcabi-http
-    compile group: 'com.jcabi', name: 'jcabi-http', version: '1.16'
+	compile group: 'com.jcabi', name: 'jcabi-http', version: '1.17.4'
+	
+	compile group: 'com.jcabi', name: 'jcabi-log', version: '0.19.0'
+	
     // https://mvnrepository.com/artifact/org.mockito/mockito-all
     testCompile group: 'org.mockito', name: 'mockito-all', version: '2.0.2-beta'
 
