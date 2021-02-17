@@ -1,13 +1,18 @@
 package com.rocketlabs.sellercenterapi.entities;
 
-import com.rocketlabs.sellercenterapi.core.request.Request;
-import com.rocketlabs.sellercenterapi.exceptions.SdkException;
-import com.rocketlabs.sellercenterapi.core.Client;
-import com.rocketlabs.sellercenterapi.core.response.SuccessResponse;
-
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import com.jcabi.aspects.Loggable;
+import com.jcabi.http.request.ApacheRequest;
+import com.rocketlabs.sellercenterapi.core.Client;
+import com.rocketlabs.sellercenterapi.core.request.Request;
+import com.rocketlabs.sellercenterapi.core.response.SuccessResponse;
+import com.rocketlabs.sellercenterapi.exceptions.SdkException;
 
 /**
  * Interface responsible to gather generic calls (not related to a special entity)
@@ -52,6 +57,36 @@ public final class SellerCenter {
      * @return list of the customer details for a range of orders
      * @throws SdkException
      */
+    
+    static {
+    	Annotation annotation = ApacheRequest.class.getDeclaredAnnotations()[1];
+    	changeAnnotationValue(annotation, "value", Loggable.ERROR);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public static Object changeAnnotationValue(Annotation annotation, String key, Object newValue){
+	    Object handler = Proxy.getInvocationHandler(annotation);
+	    Field f;
+	    try {
+	        f = handler.getClass().getDeclaredField("memberValues");
+	    } catch (NoSuchFieldException | SecurityException e) {
+	        throw new IllegalStateException(e);
+	    }
+	    f.setAccessible(true);
+	    Map<String, Object> memberValues;
+	    try {
+	        memberValues = (Map<String, Object>) f.get(handler);
+	    } catch (IllegalArgumentException | IllegalAccessException e) {
+	        throw new IllegalStateException(e);
+	    }
+	    Object oldValue = memberValues.get(key);
+	    if (oldValue == null || oldValue.getClass() != newValue.getClass()) {
+	        throw new IllegalArgumentException();
+	    }
+	    memberValues.put(key,newValue);
+	    return oldValue;
+	}
+    
     public static OrderCollection getOrders(GetOrdersOptions options) throws SdkException {
         return orderRepository.retrieve(options);
     }
