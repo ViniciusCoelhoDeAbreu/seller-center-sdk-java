@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jcabi.aspects.Loggable;
 import com.jcabi.http.request.ApacheRequest;
@@ -16,6 +17,8 @@ import com.rocketlabs.sellercenterapi.core.Client;
 import com.rocketlabs.sellercenterapi.core.request.Request;
 import com.rocketlabs.sellercenterapi.core.response.SuccessResponse;
 import com.rocketlabs.sellercenterapi.exceptions.SdkException;
+
+import ch.qos.logback.classic.Level;
 
 /**
  * Interface responsible to gather generic calls (not related to a special entity)
@@ -62,36 +65,9 @@ public final class SellerCenter {
      */
     
     static {
-    	Annotation annotation = ApacheRequest.class.getDeclaredAnnotations()[1];
-    	Annotation annotation2 = BaseRequest.class.getDeclaredAnnotations()[1];
-    	changeAnnotationValue(annotation, "value", Loggable.ERROR);
-    	changeAnnotationValue(annotation2, "value", Loggable.ERROR);
-    	
+		ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+		rootLogger.setLevel(Level.ERROR);
     }
-    
-    @SuppressWarnings("unchecked")
-	public static Object changeAnnotationValue(Annotation annotation, String key, Object newValue){
-	    Object handler = Proxy.getInvocationHandler(annotation);
-	    Field f;
-	    try {
-	        f = handler.getClass().getDeclaredField("memberValues");
-	    } catch (NoSuchFieldException | SecurityException e) {
-	        throw new IllegalStateException(e);
-	    }
-	    f.setAccessible(true);
-	    Map<String, Object> memberValues;
-	    try {
-	        memberValues = (Map<String, Object>) f.get(handler);
-	    } catch (IllegalArgumentException | IllegalAccessException e) {
-	        throw new IllegalStateException(e);
-	    }
-	    Object oldValue = memberValues.get(key);
-	    if (oldValue == null || oldValue.getClass() != newValue.getClass()) {
-	        throw new IllegalArgumentException();
-	    }
-	    memberValues.put(key,newValue);
-	    return oldValue;
-	}
     
     public static OrderCollection getOrders(GetOrdersOptions options) throws SdkException {
         return orderRepository.retrieve(options);
